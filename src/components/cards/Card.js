@@ -1,17 +1,38 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { cardAction } from '../../redux/actions/cardActions';
+import { useEffect } from 'react';
+import { fetchService } from '../../api/api';
+import { urisConstants } from '../../utils/uri-constants';
 const Card = () => {
-    const {id} = useParams();
+    const { id } = useParams();
+    const { user, isLoading, finishWithErrors, errorMessage } = useSelector( ({data}) => data );
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        console.log(id);
-    }, [id])
+        dispatch(fetchService(urisConstants(id).user));
+    }, [dispatch, id]);
+    const onClickButton = ()  => {
+        navigate('/cards');
+    }
     return (
-        <div className='ui raised very padded text container segment'
+        <>
+        { user && !isLoading && <div className='ui raised very padded text container segment'
         style={{marginTop: '80px'}}>
-            <h3 className='ui header'>Card</h3>
-            <p>The lorem ipsum is a placeholder text used in publishing and graphic design. This filler text is a short paragraph that contains all the letters of the alphabet. </p>
-        </div>
+            <h3 className='ui header'>Nombre: {user.name}</h3>
+            <p> Celular {user.phone} </p>
+           <button className='ui button' onClick={onClickButton}> Regresar </button>
+        </div>}
+        {
+          finishWithErrors && <p> {errorMessage} </p>
+        }
+        </>
     )
 }
-
-export default Card;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteCard: (id) => {dispatch(cardAction(id))}
+    }
+}
+export default connect(mapDispatchToProps)(Card);
