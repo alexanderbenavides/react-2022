@@ -1,4 +1,4 @@
-import { cardAction } from "../actions/cardActions";
+import { actionTypes } from "../actions/cardActions";
 
 const initialState = {
     cards: [
@@ -20,7 +20,7 @@ const initialState = {
     ]
 }
 const rootReducer = (state = initialState, action) => {
-    if (action.type === cardAction.deleteCard) {
+    if (action.type === actionTypes.DELETE_CARD) {
         const cards = state.cards.filter(card => card.id !== action.id);
         return {
             ...state,

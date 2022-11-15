@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getService } from './api-config';
-let dataType = '';
-let isArray = true;
+let stateType = '';
+let singleRecord = false;
 export const fetchService = createAsyncThunk('', async (params) => {
-  dataType = params.dataType;
-  isArray = params.isArray;
+  stateType = params.stateType;
+  singleRecord = params.singleRecord;
   return getService(params.path); 
 });
 
@@ -13,7 +13,7 @@ const initialState = (type) => {
     [type]: [],
     isLoading: true,
     finishWithErrors: false,
-    errorMessage: 'Hemos tenido problemas'
+    errorMessage: 'Hemos tenido problemas solicitando los datos'
   }
 }
 const PostSlice = createSlice({
@@ -21,11 +21,11 @@ const PostSlice = createSlice({
   initialState: initialState('users'),
   reducers: {
     clearData: state => {
-      state[dataType] = [];
+      state[stateType] = [];
     },
     removeItem: (state, action) => {
       const itemId = action.payload;
-      state[dataType] = state[dataType].filter(param => param.id !== itemId);
+      state[stateType] = state[stateType].filter(param => param.id !== itemId);
     },
   },
   extraReducers: {
@@ -34,21 +34,21 @@ const PostSlice = createSlice({
     },
     [fetchService.fulfilled]: (state, action) => {
       let data = [];
-      if (isArray ) {
-        const hasArr = Array.isArray(action.payload);
-        data = hasArr ? action.payload : [];
-        state.finishWithErrors = !hasArr;
-      }  else {
+      if (singleRecord) {
         const emptyObj =  Object.keys(action.payload).length === 0;
         state.finishWithErrors = emptyObj;
         data = action.payload;
+      }  else {
+        const isArray = Array.isArray(action.payload);
+        data = isArray ? action.payload : [];
+        state.finishWithErrors = !isArray;
       }
       state.isLoading = false;
-      state[dataType] = data;
+      state[stateType] = data;
     },
     [fetchService.rejected]: (state) => {
       state.isLoading = false;
-      state[dataType] = isArray ? [] : {};
+      state[stateType] = singleRecord ? {} : [];
     }
   }
 })

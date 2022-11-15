@@ -3,13 +3,13 @@ export const urisConstants = (id = 1) => {
     return {
         users: {
             path: 'users',
-            dataType: 'users',
-            isArray: true,
+            stateType: 'users',
+            singleRecord: false,
         },
         user: {
             path: `users/${id}`,
-            dataType: 'user',
-            isArray: false,
+            stateType: 'user',
+            singleRecord: true,
         }
     }
 }

@@ -1,16 +1,31 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import  './navbar.css';
 const NavBar = () => {
     return (
-        <nav className='ui raised very padded segment'>
-            <label className='ui teal inverted segment'>Gloria</label>
-            <div className='ui right floated header'>
-                <NavLink to='/'><button className='ui button'>Home</button></NavLink>
-                <NavLink to='/about'><button className='ui button'>About</button></NavLink>
-                <NavLink to='/contact'><button className='ui button'>Contact</button></NavLink>
-                <NavLink to='/cards'><button className='ui button'>Card</button></NavLink>
+    <nav className="navbar navbar-expand-lg bg-light">
+        <div className="container-fluid">
+            <div className="collapse navbar-collapse">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li className="nav-item">
+                        <NavLink to='/'><button className='btn btn-outline'>Home</button></NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to='/about'><button className='btn btn-outline'>About</button></NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to='/contact'><button className='btn btn-outline'>Contact</button></NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to='/users'><button className='btn btn-outline'>Users</button></NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to='/cards'><button className='btn btn-outline'>Cards</button></NavLink>
+                    </li>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
     )
 }
 

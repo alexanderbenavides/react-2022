@@ -1,45 +1,43 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearData, fetchService, removeItem } from '../../api/api';
-import { urisConstants } from '../../utils/uri-constants';
+import React from 'react';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { cardAction } from '../../redux/actions/cardActions';
 const Cards = () => {
     const dispatch = useDispatch();
-    const { users, isLoading, finishWithErrors, errorMessage } = useSelector(({data}) => data);
-    useEffect(() => {
-        dispatch(fetchService(urisConstants().users));
-    }, [dispatch]);
+    const { cards } = useSelector(({rootReducer}) => rootReducer);
 
-    const removeAll = () => {
-        dispatch(clearData());
+
+    const removeCard = (user) => {
+      dispatch(cardAction(user.id));
     }
 
-    const removeUser = (user) => {
-      dispatch(removeItem(user.id));
-    }
     return (
         <>
-          {!isLoading && (<button className='ui button' onClick={removeAll}>Limpiar</button>)}
-          {
-            !isLoading && users.map(user => (
-                <div className='ui raised very padded text container segment'
-                    style={{marginTop: '80px'}} key= {user.id}>
-                    <h3 className='ui header'>Nombre: {user.name}</h3>
-                    <p> Celular {user.phone} </p>
-                    <Link to={`${user.id}`}><button className='ui button'>Ver detalle</button></Link>
-                    <button className='ui button red' onClick={ () => removeUser(user)}>Eliminar</button>
-                </div>
-
-            ))
-          }
-          {
-            finishWithErrors && <p> {{errorMessage}} </p>
-          }
+          <section className='mt-2 text-center'>
+              <div className='cards-container'>
+                {
+                  cards.map(card => (
+                    <div style={{width: '18rem'}} className="card mb-2" key= {card.id}>
+                      <div className="card-body">
+                        <h5 className="card-title">{card.title}</h5>
+                        <p className="card-text">{card.body}</p>
+                        <div className='d-flex justify-content-around'>
+                          <button className='btn btn-danger' onClick={() => removeCard(card)}>Eliminar</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+          </section>
         </>
     )
 }
-
-export default Cards;
+const mapDispatchToProps = (dispatch) => {
+  return {
+      deleteCard: (id) => {dispatch(cardAction(id))}
+  }
+}
+export default  connect(mapDispatchToProps)(Cards);
 // export default connect(mapStateToProps)(Cards);
 
 // const connect = mapS => c => < c  cards= {[]} />

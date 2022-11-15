@@ -1,6 +1,10 @@
+export const actionTypes = {
+    DELETE_CARD: 'DELETE_CARD'
+}
+
 export const cardAction = id => {
     return {
         id,
-        type: 'DELETE_CARD'
+        type: actionTypes.DELETE_CARD
     }
 } 
